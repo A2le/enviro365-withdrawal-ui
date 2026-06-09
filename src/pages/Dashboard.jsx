@@ -3,6 +3,8 @@ import { Box, Container, Typography, Alert, CircularProgress } from '@mui/materi
 import { getPortfolio, getWithdrawals } from '../services/withdrawalService';
 import PortfolioCard from "../components/PortfolioCard.jsx";
 import WithdrawalHistory from "../components/WithdrawalHistory.jsx";
+import WithdrawalForm from "../components/WithdrawalForm.jsx";
+import CsvExportButton from "../components/CsvExportButton.jsx";
 
 const INVESTOR_ID = 1;
 
@@ -11,6 +13,16 @@ const Dashboard = () => {
     const [withdrawals, setWithdrawals] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
+    const refreshDashboard = async () => {
+        const [portfolioResponse, withdrawalsResponse] = await Promise.all([
+            getPortfolio(INVESTOR_ID),
+            getWithdrawals(),
+        ]);
+
+        setPortfolio(portfolioResponse.data);
+        setWithdrawals(withdrawalsResponse.data);
+    };
 
     // const loadDashboardData = async () => {
     //     try {
@@ -30,7 +42,6 @@ const Dashboard = () => {
     //         setLoading(false);
     //     }
     // };
-
     useEffect(() => {
         let isMounted = true;
 
@@ -50,7 +61,6 @@ const Dashboard = () => {
                 setWithdrawals(withdrawalsResponse.data);
             } catch (err) {
                 if (!isMounted) return;
-
                 setError(err.response?.data?.message || 'Failed to load dashboard data');
             } finally {
                 if (isMounted) {
@@ -87,6 +97,12 @@ const Dashboard = () => {
             )}
 
             <PortfolioCard portfolio={portfolio} />
+            <WithdrawalForm
+                products={portfolio?.products || []}
+                onWithdrawalCreated={refreshDashboard}
+            />
+            <CsvExportButton />
+
             <WithdrawalHistory withdrawals={withdrawals} />
         </Container>
     );
