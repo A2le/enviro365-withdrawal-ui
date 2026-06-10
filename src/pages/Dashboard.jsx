@@ -101,7 +101,7 @@ const Dashboard = () => {
                 products={portfolio?.products || []}
                 onWithdrawalCreated={refreshDashboard}
             />
-            <CsvExportButton />
+            <CsvExportButton investorId={INVESTOR_ID} />
 
             <WithdrawalHistory withdrawals={withdrawals} />
         </Container>

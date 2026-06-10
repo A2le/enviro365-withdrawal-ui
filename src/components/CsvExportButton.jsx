@@ -2,9 +2,9 @@ import { Button } from '@mui/material';
 import DownloadIcon from '@mui/icons-material/Download';
 import { exportWithdrawals } from '../services/withdrawalService';
 
-const CsvExportButton = () => {
+const CsvExportButton = ({ investorId }) => {
     const handleExport = async () => {
-        const response = await exportWithdrawals();
+        const response = await exportWithdrawals(investorId);
 
         const blob = new Blob([response.data], {
             type: 'text/csv;charset=utf-8;',

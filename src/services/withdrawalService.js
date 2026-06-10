@@ -9,7 +9,9 @@ export const createWithdrawal = data =>
 export const getWithdrawals = () =>
     api.get('/withdrawals');
 
-export const exportWithdrawals = () =>
-    api.get('/withdrawals/export', {
+export const exportWithdrawals = (investorId) => {
+    return api.get('/withdrawals/export', {
+        params: { investorId },
         responseType: 'blob',
     });
+};
